@@ -29,8 +29,12 @@ namespace wandermate.backened.Models
 
          public bool ReserveNow{get;set;}
 
+
+//  ONW TO ONE RELATION
          public Hotelinfo hotelinfo{get;set;}
 
+
+// ONE TO MANY RELATION
          public List<Review> HotelReviews{get;set;}= new List<Review>();
 
 

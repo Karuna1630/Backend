@@ -9,6 +9,7 @@ namespace wandermate.backened.DTOs.HotelDTO
     {
 
 
+// id automatically dine vako le garda id nadeko ani tehi vayer yo naya create dto banako dto le uslly data filter garx
  
         public string Name { get; set; } = String.Empty;
 

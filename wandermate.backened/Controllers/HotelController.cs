@@ -25,8 +25,13 @@ namespace wandermate.backened.Controllers
 
         public async Task< IActionResult> GetAll(){
             var hotels = await _context.Hotel.ToListAsync();
+            if(hotels == null)
+            {
+                return NotFound();
+            }
 
             var hotelDTO = hotels.Select(hotel=> new HotelDTO{
+                //  select is Same to map in js
                 Id = hotel.Id,
                 Name = hotel.Name,
                 Price = hotel.Price,
