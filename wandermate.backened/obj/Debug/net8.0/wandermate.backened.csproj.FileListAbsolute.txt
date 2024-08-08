@@ -103,3 +103,5 @@ C:\Users\USER-PC\OneDrive\Documents\backened\wandermate.backened\bin\Debug\net8.
 C:\Users\USER-PC\OneDrive\Documents\backened\wandermate.backened\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\USER-PC\OneDrive\Documents\backened\wandermate.backened\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\USER-PC\OneDrive\Documents\backened\wandermate.backened\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\USER-PC\OneDrive\Documents\backened\wandermate.backened\obj\Debug\net8.0\wandermate.backened.sourcelink.json
+C:\Users\USER-PC\OneDrive\Documents\backened\wandermate.backened\bin\Debug\net8.0\BCrypt.Net-Next.dll

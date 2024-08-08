@@ -8,7 +8,7 @@ using wandermate.backened.Models;
 
 namespace wandermate.backened.Controllers
 {
-      [Route("wandermate_backened/HotelReviews")]
+    [Route("wandermate_backened/HotelReviews")]
     [ApiController]
     public class HotelReviewsController:ControllerBase
     {

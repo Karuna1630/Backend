@@ -7,18 +7,20 @@ using wandermate.backened.Models;
 
 namespace wandermate.backened.Data
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions dbContextOptions)
-        :base(dbContextOptions)
+        : base(dbContextOptions)
         {
 
         }
 
-        public DbSet <Hotel> Hotel{get;set;}
+        public DbSet<Hotel> Hotel { get; set; }
 
-        public DbSet<TravelPackages>TravelPackages{get;set;}
+        public DbSet<TravelPackages> TravelPackages { get; set; }
 
-        public DbSet<Review> HotelReviews {get;set;}
+        public DbSet<Review> HotelReviews { get; set; }
+
+        public DbSet<Users> Users { get; set; }
     }
 }

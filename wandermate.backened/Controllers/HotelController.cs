@@ -151,6 +151,8 @@ namespace wandermate.backened.Controllers
             return NoContent();
         }
 
+       
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotel([FromRoute] int id) 
         {

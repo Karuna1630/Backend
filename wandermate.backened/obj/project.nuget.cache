@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "D/tpAj6A4jE=",
+  "dgSpecHash": "IpzTeSbMdKM=",
   "success": true,
   "projectFilePath": "C:\\Users\\USER-PC\\OneDrive\\Documents\\backened\\wandermate.backened\\wandermate.backened.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\USER-PC\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\USER-PC\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\USER-PC\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.7\\microsoft.aspnetcore.openapi.8.0.7.nupkg.sha512",
     "C:\\Users\\USER-PC\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",

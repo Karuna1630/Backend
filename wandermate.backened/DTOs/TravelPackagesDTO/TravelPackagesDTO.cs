@@ -11,7 +11,7 @@ namespace wandermate.backened.DTOs.TravelPackagesDTO
   
     public class TravelPackagesDTO
     {
-         [Key]
+         
         public int Id{get;set;}
 
         public string Title{get;set;} = String.Empty;
