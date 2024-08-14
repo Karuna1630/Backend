@@ -12,7 +12,7 @@
 
 // namespace wandermate.backened.Controllers
 // {
-//     [Route("Wandermate_backened/signUp")]
+//     [Route("api/signUp")]
 //     [ApiController]
 //     public class SignUpController : ControllerBase
 //     {

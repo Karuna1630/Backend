@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using wandermate.backened.Data;
 namespace wandermate.backened.Controllers
 {
-    [Route("wandermate_backened/travelpackages")]
+    [Route("api/travelpackages")]
     [ApiController]
     public class TravelPackagesController:ControllerBase
     {
