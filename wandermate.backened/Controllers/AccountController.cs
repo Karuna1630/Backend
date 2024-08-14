@@ -112,7 +112,7 @@ namespace wandermate.backened.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateUser(UserUpdateDTO userUpdateDTO)
         {
-            var username = User.GetUserName();
+            var username = User.GetUsername();
             var user = await _userManager.FindByNameAsync(username);
 
             if (user == null)
