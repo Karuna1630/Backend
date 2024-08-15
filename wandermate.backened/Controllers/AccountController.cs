@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using wandermate.backened.DTOs.AccountsDTO;
+using wandermate.backened.Extensions;
 using wandermate.backened.Interface;
 using wandermate.backened.Models;
 using wandermate.backened.Service;
@@ -22,7 +23,7 @@ namespace wandermate.backened.Controllers
         public readonly ITokenService _tokenService;
         public readonly SignInManager<AppUser> _signinManager;
 
-        public AccountController(UserManager<AppUser> userManager, TokenService tokenService, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
         {
 
             _userManager = userManager;
@@ -74,10 +75,6 @@ namespace wandermate.backened.Controllers
                 return StatusCode(500, e);
             }
         }
-
-
-
-
 
 
 
@@ -139,25 +136,55 @@ namespace wandermate.backened.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok();
+            var users = await _userManager.Users.ToListAsync();
 
+
+            var userDTO = users.Select(user => new NewUserDTO
+            {
+                //  select is Same to map in js
+                UserId = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                Token = _tokenService.CreateToken(user),
+
+
+            }).ToList();
+
+
+            return Ok(userDTO);
         }
 
-        [HttpGet("{id}")]
 
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        [HttpDelete("{UserName}")]
+public async Task<IActionResult> DeleteUser([FromRoute] string UserName)
+{
+    // Find the user by their username
+    var userToDelete = await _userManager.FindByNameAsync(UserName);
+
+    if (userToDelete == null)
+    {
+        return NotFound("usernotfound");
+    }
+
+    try
+    {
+        // Attempt to delete the user
+        var result = await _userManager.DeleteAsync(userToDelete);
+        if (!result.Succeeded)
         {
-            return Ok();
+            // If deletion fails, return a 500 status with error details
+            return StatusCode(500, result.Errors);
         }
+    }
+    catch (Exception ex)
+    {
+        // Catch any exception and return a 500 status with the exception details
+        return StatusCode(500, ex);
+    }
 
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Remove([FromRoute] int id)
-        {
-            return Ok();
-        }
-
-
+    // Return a 204 No Content status on success
+    return NoContent();
+}
 
 
     }

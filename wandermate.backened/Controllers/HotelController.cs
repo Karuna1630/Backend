@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using wandermate.backened.Data;
@@ -11,9 +12,10 @@ using wandermate.backened.Models;
 
 namespace wandermate.backened.Controllers
 {
-    [Route("wandermate_backened/hotel")]
+    [Route("api/hotel")]
     [ApiController]
-    public class HotelController:ControllerBase
+
+    public class HotelController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         public HotelController(ApplicationDbContext context)
@@ -23,14 +25,16 @@ namespace wandermate.backened.Controllers
 
         [HttpGet]
 
-        public async Task< IActionResult> GetAll(){
+        public async Task<IActionResult> GetAll()
+        {
             var hotels = await _context.Hotel.ToListAsync();
-            if(hotels == null)
+            if (hotels == null)
             {
                 return NotFound();
             }
 
-            var hotelDTO = hotels.Select(hotel=> new HotelDTO{
+            var hotelDTO = hotels.Select(hotel => new HotelDTO
+            {
                 //  select is Same to map in js
                 Id = hotel.Id,
                 Name = hotel.Name,
@@ -49,23 +53,23 @@ namespace wandermate.backened.Controllers
 
         [HttpGet("{id}")]
 
-      public async Task<IActionResult> GetById([FromRoute] int id) 
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-             var hotel = await _context.Hotel.Where(h => h.Id == id)
-             .Select(h => new HotelDTO
-                {
-                    Id = h.Id,
-                    Name = h.Name,
-                    Price = h.Price,
-                    Image = h.Image,
-                    Description = h.Description,
-                    Rating = h.Rating,
-                    FreeCancellation = h.FreeCancellation,
-                    ReserveNow = h.ReserveNow
-                })
-                .FirstOrDefaultAsync();
+            var hotel = await _context.Hotel.Where(h => h.Id == id)
+            .Select(h => new HotelDTO
+            {
+                Id = h.Id,
+                Name = h.Name,
+                Price = h.Price,
+                Image = h.Image,
+                Description = h.Description,
+                Rating = h.Rating,
+                FreeCancellation = h.FreeCancellation,
+                ReserveNow = h.ReserveNow
+            })
+               .FirstOrDefaultAsync();
 
-             if (hotel == null)
+            if (hotel == null)
             {
                 return NotFound();
             }
@@ -73,10 +77,13 @@ namespace wandermate.backened.Controllers
             return Ok(hotel);
         }
 
-    [HttpPost]
-        public async Task<IActionResult> CreateHotel([FromBody] CreateHotelDTO hotelDTO) 
+        [Authorize]//it can be only access by authorized user not by route
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateHotel([FromBody] CreateHotelDTO hotelDTO)
         {
-           if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -91,7 +98,7 @@ namespace wandermate.backened.Controllers
                 FreeCancellation = hotelDTO.FreeCancellation,
                 ReserveNow = hotelDTO.ReserveNow
             };
-               try
+            try
             {
                 await _context.Hotel.AddAsync(hotel);
                 await _context.SaveChangesAsync();
@@ -99,19 +106,19 @@ namespace wandermate.backened.Controllers
             }
             catch (Exception ex)
             {
-                
+
                 return StatusCode(500, ex);
             }
         }
 
-       
-    
+
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateHotel(int id, [FromBody] UpdateHotelDTO hotelDTO)
         {
 
-           var hotelInDatabase = await _context.Hotel.FindAsync(id);
+            var hotelInDatabase = await _context.Hotel.FindAsync(id);
             if (hotelInDatabase == null)
             {
                 return NotFound();
@@ -140,21 +147,21 @@ namespace wandermate.backened.Controllers
                 else
                 {
                     throw;
-            }
+                }
             }
             catch (Exception ex)
             {
-              
+
                 return StatusCode(500, ex);
             }
 
             return NoContent();
         }
 
-       
+
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteHotel([FromRoute] int id) 
+        public async Task<IActionResult> DeleteHotel([FromRoute] int id)
         {
             var hotelToDelete = await _context.Hotel.FindAsync(id);
 
@@ -170,7 +177,7 @@ namespace wandermate.backened.Controllers
             }
             catch (Exception ex)
             {
-               
+
                 return StatusCode(500, ex);
             }
 

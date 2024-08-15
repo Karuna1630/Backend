@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("wandermate.backened")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a675b0975c60d3844441577f4c8d7595f1e1842c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5aa3a2c102b53a980fed07a72471a9231fbc0b2d")]
 [assembly: System.Reflection.AssemblyProductAttribute("wandermate.backened")]
 [assembly: System.Reflection.AssemblyTitleAttribute("wandermate.backened")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

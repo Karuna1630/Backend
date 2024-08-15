@@ -3515,11 +3515,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\USER-PC\\OneDrive\\Documents\\backened\\wandermate.backened\\wandermate.backened.csproj",
+      "projectUniqueName": "C:\\Users\\USER-PC\\OneDrive\\Documents\\backened\\wandermate.backened\\wandermate.backened.csproj",
       "projectName": "wandermate.backened",
-      "projectPath": "c:\\Users\\USER-PC\\OneDrive\\Documents\\backened\\wandermate.backened\\wandermate.backened.csproj",
+      "projectPath": "C:\\Users\\USER-PC\\OneDrive\\Documents\\backened\\wandermate.backened\\wandermate.backened.csproj",
       "packagesPath": "C:\\Users\\USER-PC\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\USER-PC\\OneDrive\\Documents\\backened\\wandermate.backened\\obj\\",
+      "outputPath": "C:\\Users\\USER-PC\\OneDrive\\Documents\\backened\\wandermate.backened\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\USER-PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -3619,7 +3619,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

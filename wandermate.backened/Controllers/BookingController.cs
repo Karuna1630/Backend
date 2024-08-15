@@ -89,7 +89,7 @@
 //             {
 //                 return BadRequest("Invalid HotelId or UserId.");
 //             }
-
+ 
 //             var booking = new Booking
 //             {
 //                 HotelId = bookingDTO.HotelId,
