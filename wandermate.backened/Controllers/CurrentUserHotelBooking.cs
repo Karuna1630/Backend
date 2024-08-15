@@ -7,36 +7,40 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using wandermate.backened.Data;
-using wandermate.backened.DTOs.HotelDTO.HotelBookingDTO;
+using wandermate.backened.DTOs.CurrentUserBooking;
+using wandermate.backened.DTOs.CurrentUserBookingDTO;
+using wandermate.backened.Extensions;
 using wandermate.backened.Models;
-
 
 namespace wandermate.backened.Controllers
 {
     [Authorize]
-    [Route("api/booking")]
+    [Route("api/userbookings")]
     [ApiController]
-    public class BookingController: ControllerBase
+    public class CurrentUserHotelBooking : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<AppUser> _user;
-        public BookingController(ApplicationDbContext context,UserManager<AppUser> user)
+        private readonly UserManager<AppUser> _userManager;
+        public CurrentUserHotelBooking(ApplicationDbContext context, UserManager<AppUser> userManager)
         {
-            _context=context;
-            _user = user;
+            _context = context;
+            _userManager = userManager;
         }
 
-
         [HttpGet]
-               public async Task< IActionResult> GetAll(){
+        public async Task<IActionResult> GetAll()
+        {
+            var user = User.GetUserId();
             var bookings = await _context.HotelBookings
+                .Where(hb => hb.UserId == user)
                 .Include(hb => hb.hotel)
                 .Include(hb => hb.AppUser)
                 .ToListAsync();
 
-            var  bookingDTOs = bookings.Select(booking=> new HotelBookingDTO{
+            var bookingDTOs = bookings.Select(booking => new UserBookingDTO
+            {
                 //  select is Same to map in js
-              Id = booking.Id,
+                Id = booking.Id,
                 HotelName = booking.hotel.Name,
                 UserName = booking.AppUser.UserName,
                 BookingDate = booking.BookingDate,
@@ -52,64 +56,39 @@ namespace wandermate.backened.Controllers
             return Ok(bookingDTOs);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
-        {
-            var booking = await _context.HotelBookings
-                .Where(hb => hb.Id == id)
-                .Include(hb => hb.hotel)
-                .Include(hb => hb.AppUser)
-                .Select(hb => new HotelBookingDTO
-                {
-                    Id = hb.Id,
-                    HotelName = hb.hotel.Name,
-                    UserName = hb.AppUser.UserName,
-                    BookingDate = hb.BookingDate,
-                    Duration = hb.Duration,
-                    Checkin = hb.CheckIn,
-                    Checkout = hb.CheckOut,
-                    TotalPrice = hb.TotalPrice
-                })
-                .FirstOrDefaultAsync();
 
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(booking);
-        }
-         [HttpPost]
-        public async Task<IActionResult> CreateBooking([FromBody] CreateHotelBookingDTO bookingDTO)
+        [HttpPost]
+        public async Task<IActionResult> CreateBooking([FromBody] CreateBookingDTO bookingDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var user = User.GetUserId();
             var hotel = await _context.Hotel.FindAsync(bookingDTO.HotelId);
-            var user = await _context.Users.FindAsync(bookingDTO.UserId);
 
-            if (hotel == null || user == null)
+            if (hotel == null)
             {
-                return BadRequest("Invalid HotelId or UserId.");
+                return BadRequest("Invalid HotelId.");
             }
- 
+
             var booking = new Booking
             {
                 HotelId = bookingDTO.HotelId,
-                UserId = bookingDTO.UserId,
+                UserId = user, // Automatically set the current user's ID
                 BookingDate = bookingDTO.BookingDate,
                 Duration = bookingDTO.Duration,
                 CheckIn = bookingDTO.Checkin,
                 CheckOut = bookingDTO.Checkout,
                 TotalPrice = bookingDTO.TotalPrice
             };
-               try
+
+            try
             {
                 await _context.HotelBookings.AddAsync(booking);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetById), new { id = booking.Id }, bookingDTO);
+                return CreatedAtAction(nameof(GetAll), new { id = booking.Id }, booking); // Use GetAll as there's no GetById
             }
             catch (Exception ex)
             {
@@ -117,21 +96,24 @@ namespace wandermate.backened.Controllers
             }
         }
 
-            
-        [HttpPut("{id}")]
-       public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateHotelBookingDTO bookingDTO)
+           [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBooking(int id, [FromBody] UpdateUserBookingDTO updateUserBookingDTO)
         {
-            var bookingInDatabase = await _context.HotelBookings.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            var bookingInDatabase = await _context.HotelBookings
+                .Where(hb => hb.Id == id && hb.UserId == user.Id)
+                .FirstOrDefaultAsync();
+
             if (bookingInDatabase == null)
             {
                 return NotFound();
             }
 
-            bookingInDatabase.BookingDate = bookingDTO.BookingDate;
-            bookingInDatabase.Duration = bookingDTO.Duration;
-            bookingInDatabase.CheckIn = bookingDTO.Checkin;
-            bookingInDatabase.CheckOut = bookingDTO.Checkout;
-            bookingInDatabase.TotalPrice = bookingDTO.TotalPrice;
+            bookingInDatabase.BookingDate = updateUserBookingDTO.BookingDate;
+            bookingInDatabase.Duration = updateUserBookingDTO.Duration;
+            bookingInDatabase.CheckIn = updateUserBookingDTO.Checkin;
+            bookingInDatabase.CheckOut = updateUserBookingDTO.Checkout;
+            bookingInDatabase.TotalPrice = updateUserBookingDTO.TotalPrice;
 
             _context.Entry(bookingInDatabase).State = EntityState.Modified;
 
@@ -141,7 +123,7 @@ namespace wandermate.backened.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.HotelBookings.Any(hb => hb.Id == id))
+                if (!_context.HotelBookings.Any(hb => hb.Id == id && hb.UserId == user.Id))
                 {
                     return NotFound();
                 }
@@ -157,13 +139,14 @@ namespace wandermate.backened.Controllers
 
             return NoContent();
         }
-        
-
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking([FromRoute] int id)
         {
-            var bookingToDelete = await _context.HotelBookings.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            var bookingToDelete = await _context.HotelBookings
+                .Where(hb => hb.Id == id && hb.UserId == user.Id)
+                .FirstOrDefaultAsync();
 
             if (bookingToDelete == null)
             {
@@ -182,5 +165,7 @@ namespace wandermate.backened.Controllers
 
             return NoContent();
         }
-    }
+}
+
+ 
 }

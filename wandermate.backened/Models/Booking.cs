@@ -16,7 +16,7 @@ namespace wandermate.backened.Models
         public int HotelId{get;set;}
         public Hotel? hotel{get;set;}//navigation property it can be null also
 
-        public int UserId{get;set;}
+        public string UserId{get;set;}
         public AppUser? AppUser{get;set;}
 
         public DateTime BookingDate{get;set;}
@@ -24,6 +24,7 @@ namespace wandermate.backened.Models
         public DateTime CheckIn{get;set;}
 
         public DateTime CheckOut{get;set;}
-        public int TotalPrice{get;set;}
+        [Range(0.01, double.MaxValue)]
+        public decimal TotalPrice{get;set;}
     }
 }
