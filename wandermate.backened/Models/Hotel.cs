@@ -38,7 +38,7 @@ namespace wandermate.backened.Models
         public List<Review> HotelReviews { get; set; } = new List<Review>();
 
 
-        public List<Booking> HotelBooking { get; set; } = new List<Booking>();
+        public List<Booking> HotelBookings { get; set; } = new List<Booking>();
 
     }
 }

@@ -26,26 +26,26 @@ namespace wandermate.backened.Data
         // public DbSet<Users> Users { get; set; }
 
 
-        // public DbSet<Booking> HotelBookings { get; set; }
+        public DbSet<Booking> HotelBookings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // // Configure many-to-many 
-            // modelBuilder.Entity<Booking>()
-            //     .HasOne(hb => hb.hotel) //it shows it has one relation with hotel whic include one hotelid
-            //     .WithMany(h => h.HotelBooking)//it shows many relation with booking
-            //     .HasForeignKey(hb => hb.HotelId)//it shows that hotelid as  foreignkey 
-            //     .OnDelete(DeleteBehavior.Restrict);
+            // Configure many-to-many 
+            builder.Entity<Booking>()
+                .HasOne(hb => hb.hotel) //it shows it has one relation with hotel whic include one hotelid
+                .WithMany(h => h.HotelBookings)//it shows many relation with booking
+                .HasForeignKey(hb => hb.HotelId)//it shows that hotelid as  foreignkey 
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // modelBuilder.Entity<Booking>()
-            //     .HasOne(hb => hb.user)
-            //     .WithMany(u => u.HotelBooking)
-            //     .HasForeignKey(hb => hb.UserId)
-            //     .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Booking>()
+                .HasOne(hb => hb.AppUser)
+                .WithMany(u => u.HotelBookings)
+                .HasForeignKey(hb => hb.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // modelBuilder.Entity<Users>()
+            // builder.Entity<Users>()
             //    .HasIndex(u => u.Email)
             //    .IsUnique();
 
